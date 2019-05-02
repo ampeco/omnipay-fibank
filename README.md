@@ -1,5 +1,5 @@
 # omnipay-fibank
-Omnipay plugin for fibank ECOMM recurring payments
+Omnipay plugin for [fibank ECOMM](https://webops.eu/blog/fibank-bg-ecomm-картови-раплащания/) recurring payments
 
 ## Installation
 ```bash

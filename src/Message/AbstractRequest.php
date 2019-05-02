@@ -63,6 +63,16 @@ abstract class AbstractRequest extends BaseAbstractRequest
     {
         return $this->setParameter('merchantCertificatePassword', $value);
     }
+    
+    public function getConnectTimeout()
+    {
+        return $this->getParameter('connectTimeout');
+    }
+    
+    public function setConnectTimeout($value)
+    {
+        return $this->setParameter('connectTimeout', $value);
+    }
     public function configure()
     {
         if ($this->getTestMode()){
@@ -77,6 +87,10 @@ abstract class AbstractRequest extends BaseAbstractRequest
         $this->fibank->setClientIpAddr($this->getClientIp());
         
         $this->fibank->setCurrencyCode($this->getCurrencyNumeric());
+        
+        if ($this->getConnectTimeout()){
+            $this->fibank->setConnectTimeout($this->getConnectTimeout());
+        }
     }
     
     

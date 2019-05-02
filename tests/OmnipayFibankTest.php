@@ -1,6 +1,6 @@
 <?php
 
-namespace Ampeco\Modules\OmnipayFibankTests;
+namespace Ampeco\OmnipayFibankTests;
 
 use Ampeco\OmnipayFibank\Ecomm;
 use Ampeco\OmnipayFibank\Exceptions\EcommException;

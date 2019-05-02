@@ -100,6 +100,16 @@ class Gateway extends AbstractGateway
         return $this->setParameter('successUrl', $value);
     }
     
+    public function getConnectTimeout()
+    {
+        return $this->getParameter('connectTimeout');
+    }
+    
+    public function setConnectTimeout($value)
+    {
+        return $this->setParameter('connectTimeout', $value);
+    }
+    
     
     protected function createRequest($class, array $parameters)
     {

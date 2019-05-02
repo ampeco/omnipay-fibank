@@ -12,6 +12,7 @@
     "license": "MIT",
     "require": {
         "php": "^7.2",
+        "ext-curl": "*",
         "omnipay/common": "^3"
     },
     "require-dev": {

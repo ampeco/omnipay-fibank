@@ -375,7 +375,7 @@ class OmnipayFibankTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
     
-    public function tearDown()
+    public function tearDown(): void
     {
         Mockery::close();
     }

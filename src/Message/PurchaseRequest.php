@@ -16,7 +16,7 @@ class PurchaseRequest extends AbstractRequest
     public function getData()
     {
         return [
-            'amount' => $this->getAmountInteger() / 100,
+            'amount' => $this->getAmountInteger(),
             'description' => $this->getDescription(),
             'recc_pmnt_id' => $this->getCardReference(),
         ];

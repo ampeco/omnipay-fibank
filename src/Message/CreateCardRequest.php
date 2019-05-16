@@ -16,7 +16,7 @@ class CreateCardRequest extends AbstractRequest
     public function getData()
     {
         return [
-            'amount' => $this->getAmountInteger()/100,
+            'amount' => $this->getAmountInteger(),
             'description' => $this->getDescription(),
             'expiry' => $this->getParameter('expiry'),
         ];

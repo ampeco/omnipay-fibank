@@ -16,9 +16,6 @@ class RefundRequest extends AbstractRequest
     public function getData()
     {
         $amount = $this->getAmountInteger();
-        if ($amount){
-            $amount /= 100;
-        }
         return [
             'amount' => $amount,
             'trans_id' => $this->getTransactionId(),

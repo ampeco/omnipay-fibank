@@ -73,6 +73,11 @@ class Response extends AbstractResponse
         $res->imageUrl = '';
         $res->last4 = '';
         $res->cardType = 'Unknown';
+        $expiration = $this->data['RECC_PMNT_EXPIRY'];
+        $expirationMonth = intval(substr($expiration, 0, 2));
+        $expirationYear = 2000 + intval(substr($expiration, 2, 2));
+        $res->expirationMonth = $expirationMonth;
+        $res->expirationYear = $expirationYear;
         if (!$card_number){
             return $res;
         }

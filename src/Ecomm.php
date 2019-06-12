@@ -70,7 +70,6 @@ class Ecomm
      * @param $description
      * @return array
      * @throws EcommException
-     * @throws \Gentor\Fibank\Service\EcommException
      */
     public function sendTransaction($amount, $description)
     {
@@ -90,7 +89,6 @@ class Ecomm
      * @param $amount
      * @return array
      * @throws EcommException
-     * @throws \Gentor\Fibank\Service\EcommException
      */
     public function refundTransaction($trans_id, $amount = null)
     {
@@ -103,6 +101,26 @@ class Ecomm
             $params['amount'] = $amount;
         }
         
+        return $this->sendRequest($params);
+    }
+
+    /**
+     * @param $trans_id
+     * @param $amount
+     * @return array
+     * @throws EcommException
+     */
+    public function reverseTransaction($trans_id, $amount = null)
+    {
+        $params = [
+            'command'  => 'r',
+            'trans_id' => $trans_id,
+        ];
+
+        if ($amount !== null){
+            $params['amount'] = $amount;
+        }
+
         return $this->sendRequest($params);
     }
     
@@ -148,7 +166,6 @@ class Ecomm
      * @param $trans_id
      * @return array
      * @throws EcommException
-     * @throws \Gentor\Fibank\Service\EcommException
      */
     public function checkTransactionStatus($trans_id)
     {

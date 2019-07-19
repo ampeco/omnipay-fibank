@@ -61,7 +61,12 @@ class Response extends AbstractResponse
                 return $this->data['additionalResultCodes'][$firstNumber . 'xx'];
             }
         }
-        return @EcommException::$responseCodes[$this->data['RESULT_CODE']];
+
+        if (EcommException::$responseCodes[$this->data['RESULT_CODE']]) {
+            return EcommException::$responseCodes[$this->data['RESULT_CODE']];
+        } else {
+            return $this->data['RESULT_CODE'];
+        }
     }
     
     public function getPaymentMethod(){

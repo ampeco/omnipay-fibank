@@ -23,12 +23,11 @@ class FibankConfiguration
             $currencyCode = $currencies->numericCodeFor(new Currency(self::$global['currency']));
             $res->setCurrencyCode($currencyCode);
         }
+
         if (isset(self::$global['connectTimeout'])) {
             $res->setConnectTimeout(self::$global['connectTimeout']);
         }
-        if (isset(self::$global['connectTimeout'])) {
-            $res->setConnectTimeout(self::$global['connectTimeout']);
-        }
+        
         if (isset(self::$global['testMode']) && self::$global['testMode']) {
             $res->setTestMode();
             

@@ -16,9 +16,10 @@ class PurchaseRequest extends AbstractRequest
     public function getData()
     {
         return [
-            'amount' => $this->getAmountInteger(),
-            'description' => $this->getDescription(),
+            'amount'       => $this->getAmountInteger(),
+            'description'  => $this->getDescription(),
             'recc_pmnt_id' => $this->getCardReference(),
+            'language'     => $this->getLanguage(),
         ];
     }
     
@@ -30,7 +31,8 @@ class PurchaseRequest extends AbstractRequest
      */
     public function sendData($data)
     {
-        $response = $this->fibank->purchaseRecurringPayment($data['amount'], $data['description'], $data['recc_pmnt_id']);
+        $response = $this->fibank->purchaseRecurringPayment($data['amount'], $data['description'],
+            $data['recc_pmnt_id'], $data['language']);
         
         return $this->createResponse($response, null, [
             '108' => 'Merchant communication with cardholder has to be done',

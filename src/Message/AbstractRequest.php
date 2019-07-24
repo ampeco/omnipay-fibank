@@ -3,9 +3,8 @@
 namespace Ampeco\OmnipayFibank\Message;
 use Ampeco\OmnipayFibank\Ecomm;
 use Omnipay\Common\Http\ClientInterface;
-use Omnipay\Common\Exception\InvalidRequestException;
-use Symfony\Component\HttpFoundation\Request as HttpRequest;
 use Omnipay\Common\Message\AbstractRequest as BaseAbstractRequest;
+use Symfony\Component\HttpFoundation\Request as HttpRequest;
 
 /**
  * Abstract Request
@@ -72,6 +71,16 @@ abstract class AbstractRequest extends BaseAbstractRequest
     public function setConnectTimeout($value)
     {
         return $this->setParameter('connectTimeout', $value);
+    }
+
+    public function getLanguage()
+    {
+        return $this->getParameter('language');
+    }
+
+    public function setLanguage($value)
+    {
+        return $this->setParameter('language', $value);
     }
     public function configure()
     {

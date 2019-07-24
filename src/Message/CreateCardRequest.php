@@ -16,9 +16,10 @@ class CreateCardRequest extends AbstractRequest
     public function getData()
     {
         return [
-            'amount' => $this->getAmountInteger(),
+            'amount'      => $this->getAmountInteger(),
             'description' => $this->getDescription(),
-            'expiry' => $this->getParameter('expiry'),
+            'expiry'      => $this->getParameter('expiry'),
+            'language'    => $this->getLanguage(),
         ];
     }
     
@@ -30,7 +31,8 @@ class CreateCardRequest extends AbstractRequest
      */
     public function sendData($data)
     {
-        $response = $this->fibank->createRecurringPayment($data['amount'], $data['description'], $data['expiry']);
+        $response = $this->fibank->createRecurringPayment($data['amount'], $data['description'], $data['expiry'],
+            $data['language']);
         
         return $this->createResponse($response, isset($response['TRANSACTION_ID']));
     }

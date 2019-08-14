@@ -62,6 +62,9 @@ class Response extends AbstractResponse
             }
         }
 
+        if (!isset($this->data['RESULT_CODE'])) {
+            return '';
+        }
         if (EcommException::$responseCodes[$this->data['RESULT_CODE']]) {
             return EcommException::$responseCodes[$this->data['RESULT_CODE']];
         } else {

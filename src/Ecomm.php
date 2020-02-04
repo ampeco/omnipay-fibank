@@ -15,7 +15,18 @@ class Ecomm
     const LIVE_URL = 'https://mdpay.fibank.bg';
     const PORT = '9443';
 
+    const V2_PORT = '10443';
+
+    const PATH = '/ecomm/MerchantHandler';
+    const V2_PATH = '/ecomm_v2/MerchantHandler';
+
+    const CLIENT_PATH = '/ecomm/ClientHandler';
+    const V2_CLIENT_PATH = '/ecomm_v2/ClientHandler';
+
     protected $endpoint;
+    protected $port = self::PORT;
+    protected $path = self::PATH;
+    protected $clientPath = self::CLIENT_PATH;
     protected $certificate_pem;
     protected $certificate_pass;
     protected $client_ip_addr;
@@ -29,26 +40,48 @@ class Ecomm
     public function __construct()
     {
         $this->setLiveMode();
+        $this->setV1();
     }
-    
-    public function setTestMode(){
+
+    public function setV2()
+    {
+        $this->port = self::V2_PORT;
+        $this->path = self::V2_PATH;
+        $this->clientPath = self::V2_CLIENT_PATH;
+    }
+
+    public function setV1()
+    {
+        $this->port = self::PORT;
+        $this->path = self::PATH;
+        $this->clientPath = self::CLIENT_PATH;
+    }
+
+    public function setTestMode()
+    {
         $this->endpoint = static::TEST_URL;
     }
-    public function setLiveMode(){
+
+    public function setLiveMode()
+    {
         $this->endpoint = static::LIVE_URL;
     }
-    
-    public function setMerchantCertificate($value){
+
+    public function setMerchantCertificate($value)
+    {
         $this->certificate_pem = $value;
     }
+
     public function setMerchantCertificatePassword($value)
     {
         $this->certificate_pass = $value;
     }
 
-    public function setCurrencyCode($currencyCode){
+    public function setCurrencyCode($currencyCode)
+    {
         $this->currency = $currencyCode;
     }
+
     /**
      * @param $client_ip_addr
      */
@@ -184,7 +217,7 @@ class Ecomm
      */
     public function getRedirectUrl($trans_id)
     {
-        return $this->endpoint . '/ecomm/ClientHandler?trans_id=' . urlencode($trans_id);
+        return $this->endpoint . $this->clientPath . '?trans_id=' . urlencode($trans_id);
     }
 
     /**
@@ -194,7 +227,7 @@ class Ecomm
      */
     protected function sendRequest($params)
     {
-        $url = $this->endpoint . ':' . static::PORT . '/ecomm/MerchantHandler';
+        $url = $this->endpoint . ':' . $this->port . $this->path;
         
         $ch = curl_init();
 

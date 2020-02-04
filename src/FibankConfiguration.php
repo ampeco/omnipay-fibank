@@ -10,14 +10,19 @@ class FibankConfiguration
     public static $global = [];
     public static function ecomm(){
         $res = new Ecomm();
-        
-        if (isset(self::$global['merchantCertificate'])){
+
+        if (isset(self::$global['merchantCertificate'])) {
             $res->setMerchantCertificate(self::$global['merchantCertificate']);
         }
+
         if (isset(self::$global['merchantCertificatePassword'])) {
             $res->setMerchantCertificatePassword(self::$global['merchantCertificatePassword']);
         }
-    
+
+        if (isset(self::$global['v2']) && self::$global['v2']) {
+            $res->setV2();
+        }
+
         if (isset(self::$global['currency'])) {
             $currencies = new ISOCurrencies();
             $currencyCode = $currencies->numericCodeFor(new Currency(self::$global['currency']));
@@ -27,7 +32,7 @@ class FibankConfiguration
         if (isset(self::$global['connectTimeout'])) {
             $res->setConnectTimeout(self::$global['connectTimeout']);
         }
-        
+
         if (isset(self::$global['testMode']) && self::$global['testMode']) {
             $res->setTestMode();
             

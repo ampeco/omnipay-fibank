@@ -6,6 +6,7 @@ use Ampeco\OmnipayFibank\Exceptions\NotSupportedException;
 use Omnipay\Common\AbstractGateway;
 use Omnipay\Common\Http\ClientInterface;
 use Symfony\Component\HttpFoundation\Request as HttpRequest;
+
 /**
  * Braintree Gateway
  * @method \Omnipay\Common\Message\RequestInterface completeAuthorize(array $options = array())
@@ -47,27 +48,38 @@ class Gateway extends AbstractGateway
     public function getDefaultParameters()
     {
         return array(
-            'merchantCertificate' => '',
-            'merchantCertificatePassword'  => '',
-            'testMode'   => false,
+            'merchantCertificate'         => '',
+            'merchantCertificatePassword' => '',
+            'testMode'                    => false,
+            'v2'                          => false,
         );
     }
-    
+
     public function getMerchantCertificate()
     {
         return $this->getParameter('merchantCertificate');
     }
-    
+
     public function setMerchantCertificate($value)
     {
         return $this->setParameter('merchantCertificate', $value);
     }
-    
+
+    public function getV2()
+    {
+        return $this->getParameter('v2');
+    }
+
+    public function setV2($value)
+    {
+        return $this->setParameter('v2', $value);
+    }
+
     public function getMerchantCertificatePassword()
     {
         return $this->getParameter('merchantCertificatePassword');
     }
-    
+
     public function setMerchantCertificatePassword($value)
     {
         return $this->setParameter('merchantCertificatePassword', $value);

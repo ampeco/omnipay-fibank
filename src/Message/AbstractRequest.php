@@ -42,22 +42,32 @@ abstract class AbstractRequest extends BaseAbstractRequest
 
         return parent::send();
     }
-    
+
     public function getMerchantCertificate()
     {
         return $this->getParameter('merchantCertificate');
     }
-    
+
     public function setMerchantCertificate($value)
     {
         return $this->setParameter('merchantCertificate', $value);
     }
-    
+
+    public function getV2()
+    {
+        return $this->getParameter('v2');
+    }
+
+    public function setV2($value)
+    {
+        return $this->setParameter('v2', $value);
+    }
+
     public function getMerchantCertificatePassword()
     {
         return $this->getParameter('merchantCertificatePassword');
     }
-    
+
     public function setMerchantCertificatePassword($value)
     {
         return $this->setParameter('merchantCertificatePassword', $value);
@@ -84,20 +94,26 @@ abstract class AbstractRequest extends BaseAbstractRequest
     }
     public function configure()
     {
-        if ($this->getTestMode()){
+        if ($this->getTestMode()) {
             $this->fibank->setTestMode();
         } else {
             $this->fibank->setLiveMode();
         }
-        
+
+        if ($this->getV2()) {
+            $this->fibank->setV2();
+        } else {
+            $this->fibank->setV1();
+        }
+
         $this->fibank->setMerchantCertificate($this->getMerchantCertificate());
         $this->fibank->setMerchantCertificatePassword($this->getMerchantCertificatePassword());
-        
+
         $this->fibank->setClientIpAddr($this->getClientIp());
-        
+
         $this->fibank->setCurrencyCode($this->getCurrencyNumeric());
-        
-        if ($this->getConnectTimeout()){
+
+        if ($this->getConnectTimeout()) {
             $this->fibank->setConnectTimeout($this->getConnectTimeout());
         }
     }

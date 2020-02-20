@@ -4,10 +4,11 @@ namespace Ampeco\OmnipayFibank\Message;
 
 use Ampeco\OmnipayFibank\Exceptions\EcommException;
 use Omnipay\Common\Message\AbstractResponse;
+use Omnipay\Common\Message\RedirectResponseInterface;
 
-class Response extends AbstractResponse
+class Response extends AbstractResponse implements RedirectResponseInterface
 {
-    
+
     /**
      * Is the response successful?
      *
@@ -15,7 +16,7 @@ class Response extends AbstractResponse
      */
     public function isSuccessful()
     {
-        if (isset($this->data['isSuccessful'])){
+        if (isset($this->data['isSuccessful'])) {
             return (bool)$this->data['isSuccessful'];
         }
         return @$this->data['RESULT'] == 'OK';

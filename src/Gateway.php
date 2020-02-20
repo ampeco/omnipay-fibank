@@ -150,11 +150,7 @@ class Gateway extends AbstractGateway
     
     public function void(array $parameters = array())
     {
-        throw new NotSupportedException('The void method is not supported by fibank');
-    }
-    public function supportsVoid()
-    {
-        return false;
+        return $this->reverse($parameters);
     }
     
     public function createCard(array $parameters = array()){

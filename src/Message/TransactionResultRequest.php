@@ -29,6 +29,7 @@ class TransactionResultRequest extends AbstractRequest
     public function sendData($data)
     {
         $response = $this->fibank->checkTransactionStatus($data['trans_id']);
+        $response['TRANSACTION_ID'] = $data['trans_id'];
         
         return $this->createResponse($response);
     }

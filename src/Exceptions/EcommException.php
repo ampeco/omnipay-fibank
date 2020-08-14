@@ -51,6 +51,7 @@ class EcommException extends Exception
         '127' => 'Decline, PIN length error',
         '128' => 'Decline, PIN kay synch error',
         '129' => 'Decline, suspected counterfeit card',
+        '160' => 'Decline, SCA issue',
         '180' => 'Decline, by cardholders wish',
         '200' => 'Pick-up (general, no comments)',
         '201' => 'Pick-up, expired card',

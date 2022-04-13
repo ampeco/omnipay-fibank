@@ -58,19 +58,18 @@ class Response extends AbstractResponse implements RedirectResponseInterface
             $firstNumber = substr($this->data['RESULT_CODE'], 0, 1);
             if (isset($this->data['additionalResultCodes'][$this->data['RESULT_CODE']])){
                 return $this->data['additionalResultCodes'][$this->data['RESULT_CODE']];
-            } else if (isset($this->data['additionalResultCodes'][$firstNumber.'xx'])){
+            }
+            if (isset($this->data['additionalResultCodes'][$firstNumber.'xx'])){
                 return $this->data['additionalResultCodes'][$firstNumber . 'xx'];
             }
         }
-
         if (!isset($this->data['RESULT_CODE'])) {
             return '';
         }
-        if (EcommException::$responseCodes[$this->data['RESULT_CODE']]) {
+        if (isset(EcommException::$responseCodes[$this->data['RESULT_CODE']])) {
             return EcommException::$responseCodes[$this->data['RESULT_CODE']];
-        } else {
-            return $this->data['RESULT_CODE'];
         }
+        return $this->data['RESULT_CODE'];
     }
     
     public function getPaymentMethod(){

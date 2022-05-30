@@ -164,14 +164,60 @@ class Ecomm
             'currency'           => $this->currency,
             'client_ip_addr'     => $this->client_ip_addr,
             'description'        => $description,
-            'language'        => $language,
+            'language'           => $language,
             'msg_type'           => 'SMS',
             'perspayee_expiry'   => date('my', strtotime($expiry)),
             'perspayee_gen'      => '1',
         ];
         return $this->sendRequest($params);
     }
-    
+
+    public function createRecurringPayment2($amount, $description, $expiry, $language='en'){
+        $params = [
+            'command'            => 'd',
+            'amount'             => $amount,
+            'currency'           => $this->currency,
+            'client_ip_addr'     => $this->client_ip_addr,
+            'description'        => $description,
+            'language'           => $language,
+            'msg_type'           => 'DMS',
+            'biller_client_id'   => 'asdf3',
+            'perspayee_expiry'   => date('my', strtotime($expiry)),
+            'perspayee_gen'      => '1',
+            'oneclick'           => 'Y'
+        ];
+        return $this->sendRequest($params);
+    }
+
+    public function createPreAuthorizationRequest($amount, $description, $language='en'){
+        $params = [
+            'command'            => 'f',
+            'amount'             => $amount,
+            'currency'           => $this->currency,
+            'client_ip_addr'     => $this->client_ip_addr,
+            'description'        => $description,
+            'language'           => $language,
+            'msg_type'           => 'DMS',
+            'biller_client_id'   => 'asdf3',
+            'oneclick'           => 'Y',
+            'template_type' => 'DMS'
+        ];
+        return $this->sendRequest($params);
+    }
+
+    public function createTransactionCompletionCaptureRequest($amount, $description, $trans_id){
+        $params = [
+            'command'            => 't',
+            'trans_id'           => $trans_id,
+            'amount'             => $amount,
+            'currency'           => $this->currency,
+            'client_ip_addr'     => $this->client_ip_addr,
+            'description'        => $description,
+            'msg_type'           => 'DMS',
+        ];
+        return $this->sendRequest($params);
+    }
+
     public function purchaseRecurringPayment($amount, $description, $recc_pmnt_id, $language='en')
     {
         $params = [

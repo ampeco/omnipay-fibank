@@ -2,7 +2,6 @@
 
 namespace Ampeco\OmnipayFibank;
 
-use Ampeco\OmnipayFibank\Exceptions\NotSupportedException;
 use Omnipay\Common\AbstractGateway;
 use Omnipay\Common\Http\ClientInterface;
 use Symfony\Component\HttpFoundation\Request as HttpRequest;
@@ -15,11 +14,9 @@ use Symfony\Component\HttpFoundation\Request as HttpRequest;
  */
 class Gateway extends AbstractGateway
 {
-    /**
-     * @var Ecomm
-     */
+    /** @var Ecomm */
     protected $fibank;
-    
+
     /**
      * Create a new gateway instance
      *
@@ -33,7 +30,7 @@ class Gateway extends AbstractGateway
 
         parent::__construct($httpClient, $httpRequest);
     }
-    
+
     /**
      * Get gateway display name
      *
@@ -44,15 +41,15 @@ class Gateway extends AbstractGateway
     {
         return 'Fibank';
     }
-    
+
     public function getDefaultParameters()
     {
-        return array(
+        return [
             'merchantCertificate'         => '',
             'merchantCertificatePassword' => '',
             'testMode'                    => false,
             'v2'                          => false,
-        );
+        ];
     }
 
     public function getMerchantCertificate()
@@ -84,108 +81,136 @@ class Gateway extends AbstractGateway
     {
         return $this->setParameter('merchantCertificatePassword', $value);
     }
-    
+
+    public function getMerchantPreAuthorizeCertificate()
+    {
+        return $this->getParameter('merchantPreAuthorizeCertificate');
+    }
+
+    public function setMerchantPreAuthorizeCertificate($value)
+    {
+        return $this->setParameter('merchantPreAuthorizeCertificate', $value);
+    }
+
+    public function getMerchantPreAuthorizeCertificatePassword()
+    {
+        return $this->getParameter('merchantPreAuthorizeCertificatePassword');
+    }
+
+    public function setMerchantPreAuthorizeCertificatePassword($value)
+    {
+        return $this->setParameter('merchantPreAuthorizeCertificatePassword', $value);
+    }
+
     public function getCreateCardAmount()
     {
         return $this->getParameter('createCardAmount');
     }
-    
+
     public function setCreateCardAmount($value)
     {
         return $this->setParameter('createCardAmount', $value);
     }
-    
+
     public function getCreateCardCurrency()
     {
         return $this->getParameter('createCardCurrency');
     }
-    
+
     public function setCreateCardCurrency($value)
     {
         return $this->setParameter('createCardCurrency', $value);
     }
-    
-    public function getSuccessUrl(){
+
+    public function getSuccessUrl()
+    {
         return $this->getParameter('successUrl');
     }
-    public function setSuccessUrl($value){
+
+    public function setSuccessUrl($value)
+    {
         return $this->setParameter('successUrl', $value);
     }
-    
+
     public function getConnectTimeout()
     {
         return $this->getParameter('connectTimeout');
     }
-    
+
     public function setConnectTimeout($value)
     {
         return $this->setParameter('connectTimeout', $value);
     }
-    
-    
+
     protected function createRequest($class, array $parameters)
     {
         $obj = new $class($this->httpClient, $this->httpRequest, $this->fibank);
-        
+
         return $obj->initialize(array_replace($this->getParameters(), $parameters));
     }
-    
-    public function authorize(array $parameters = array())
+
+    public function authorize(array $parameters = [])
     {
-        throw new NotSupportedException('The authorize method is not supported by fibank');
+        return $this->createRequest('\Ampeco\OmnipayFibank\Message\AuthorizeRequest', $parameters);
     }
-    
+
     public function supportsAuthorize()
     {
-        return false;
+        return true;
     }
-    public function capture(array $parameters = array())
+
+    public function capture(array $parameters = [])
     {
-        throw new NotSupportedException('The capture method is not supported by fibank');
+        return $this->createRequest('\Ampeco\OmnipayFibank\Message\CaptureRequest', $parameters);
     }
+
     public function supportsCapture()
     {
-        return false;
+        return true;
     }
-    
-    public function void(array $parameters = array())
+
+    public function void(array $parameters = [])
     {
         return $this->reverse($parameters);
     }
-    
-    public function createCard(array $parameters = array()){
-        if (!isset($parameters['currency'])){
+
+    public function createCard(array $parameters = [])
+    {
+        if (!isset($parameters['currency'])) {
             $parameters['currency'] = $this->getCreateCardCurrency();
         }
         if (!isset($parameters['amount'])) {
             $parameters['amount'] = $this->getCreateCardAmount();
         }
+
         return $this->createRequest('\Ampeco\OmnipayFibank\Message\CreateCardRequest', $parameters);
     }
-    
-    public function deleteCard(array $parameters = array())
+
+    public function deleteCard(array $parameters = [])
     {
         return $this->createRequest('\Ampeco\OmnipayFibank\Message\DeleteCardRequest', $parameters);
     }
-    
-    public function purchase(array $parameters = array())
+
+    public function purchase(array $parameters = [])
     {
         return $this->createRequest('\Ampeco\OmnipayFibank\Message\PurchaseRequest', $parameters);
     }
-    
-    public function refund(array $parameters = array())
+
+    public function refund(array $parameters = [])
     {
         return $this->createRequest('\Ampeco\OmnipayFibank\Message\RefundRequest', $parameters);
     }
-    
-    public function transactionResult(array $parameters = array()){
+
+    public function transactionResult(array $parameters = [])
+    {
         return $this->createRequest('\Ampeco\OmnipayFibank\Message\TransactionResultRequest', $parameters);
     }
 
-    public function reverse(array $parameters = array()){
+    public function reverse(array $parameters = [])
+    {
         return $this->createRequest('\Ampeco\OmnipayFibank\Message\ReversalRequest', $parameters);
     }
-    
+
     public function __call($name, $arguments)
     {
         // TODO: Implement @method \Omnipay\Common\Message\RequestInterface completeAuthorize(array $options = array())

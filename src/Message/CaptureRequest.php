@@ -30,6 +30,6 @@ class CaptureRequest extends AbstractRequest
     {
         $response = $this->fibank->createTransactionCompletionCaptureRequest($data['amount'], $data['description'], $data['TRANSACTION_ID']);
 
-//        return $this->createResponse($response, isset($response['TRANSACTION_ID']));
+        return $this->createResponse($response, isset($response['TRANSACTION_ID']));
     }
 }

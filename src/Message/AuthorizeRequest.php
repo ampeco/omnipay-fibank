@@ -15,9 +15,10 @@ class AuthorizeRequest extends AbstractRequest
     public function getData()
     {
         return [
-            'amount'      => $this->getAmountInteger(),
+            'amount' => $this->getAmountInteger(),
             'description' => $this->getDescription(),
-            'language'    => $this->getLanguage(),
+            'language' => $this->getLanguage(),
+            'cardReference' => $this->getCardReference(),
         ];
     }
 
@@ -29,8 +30,8 @@ class AuthorizeRequest extends AbstractRequest
      */
     public function sendData($data)
     {
-        $response = $this->fibank->createPreAuthorizationRequest($data['amount'], $data['description'], $data['language']);
+        $response = $this->fibank->createPreAuthorizationRequest($data['amount'], $data['description'], $data['cardReference'], $data['language']);
 
-//        return $this->createResponse($response, isset($response['TRANSACTION_ID']));
+        return $this->createResponse($response, isset($response['TRANSACTION_ID']));
     }
 }

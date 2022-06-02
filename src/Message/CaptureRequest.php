@@ -17,6 +17,7 @@ class CaptureRequest extends AbstractRequest
         return [
             'amount'      => $this->getAmountInteger(),
             'description' => $this->getDescription(),
+            'cardReference' => $this->getCardReference(),
         ];
     }
 
@@ -28,7 +29,7 @@ class CaptureRequest extends AbstractRequest
      */
     public function sendData($data)
     {
-        $response = $this->fibank->createTransactionCompletionCaptureRequest($data['amount'], $data['description'], $data['TRANSACTION_ID']);
+        $response = $this->fibank->createTransactionCompletionCaptureRequest($data['amount'], $data['description'], $data['cardReference']);
 
         return $this->createResponse($response, isset($response['TRANSACTION_ID']));
     }

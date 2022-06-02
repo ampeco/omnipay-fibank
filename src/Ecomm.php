@@ -309,7 +309,6 @@ class Ecomm
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 0);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-        curl_setopt($ch, CURLOPT_PROXY, '3.122.122.204:3128');
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $this->connect_timeout);
 
         $result = curl_exec($ch);

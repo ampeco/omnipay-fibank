@@ -30,7 +30,9 @@ class ReversalRequest extends AbstractRequest
      */
     public function sendData($data)
     {
-        $response = $this->fibank->reverseTransaction($data['trans_id'], $data['amount']);
+        $this->fibank->createTransactionCompletionCaptureRequest(100, '(#09aa987283) Register a new payment method. The amount will be reverted right after the card registration', $data['trans_id']);
+        
+        $response = $this->fibank->reverseTransaction($data['trans_id'], 100);
         
         return $this->createResponse($response);
     }

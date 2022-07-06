@@ -1,6 +1,7 @@
 <?php
 
 namespace Ampeco\OmnipayFibank\Message;
+
 use Ampeco\OmnipayFibank\Ecomm;
 use Omnipay\Common\Http\ClientInterface;
 use Omnipay\Common\Message\AbstractRequest as BaseAbstractRequest;
@@ -8,13 +9,10 @@ use Symfony\Component\HttpFoundation\Request as HttpRequest;
 
 /**
  * Abstract Request
- *
  */
 abstract class AbstractRequest extends BaseAbstractRequest
 {
-    /**
-     * @var Ecomm
-     */
+    /** @var Ecomm */
     protected $fibank;
 
     /**
@@ -72,12 +70,12 @@ abstract class AbstractRequest extends BaseAbstractRequest
     {
         return $this->setParameter('merchantCertificatePassword', $value);
     }
-    
+
     public function getConnectTimeout()
     {
         return $this->getParameter('connectTimeout');
     }
-    
+
     public function setConnectTimeout($value)
     {
         return $this->setParameter('connectTimeout', $value);
@@ -92,6 +90,7 @@ abstract class AbstractRequest extends BaseAbstractRequest
     {
         return $this->setParameter('language', $value);
     }
+
     public function configure()
     {
         if ($this->getTestMode()) {
@@ -117,28 +116,26 @@ abstract class AbstractRequest extends BaseAbstractRequest
             $this->fibank->setConnectTimeout($this->getConnectTimeout());
         }
     }
-    
-    
-    protected function createResponse($data, $isSuccessful=null, $additionalResultCodes = [])
+
+    protected function createResponse($data, $isSuccessful = null, $additionalResultCodes = [])
     {
-        if (isset($data['TRANSACTION_ID']) && !isset($data[''])){
+        if (isset($data['TRANSACTION_ID']) && !isset($data[''])) {
             $data = array_merge($data, [
-                'redirect_url' => $this->fibank->getRedirectUrl($data['TRANSACTION_ID'])
+                'redirect_url' => $this->fibank->getRedirectUrl($data['TRANSACTION_ID']),
             ]);
         }
-        if (!is_null($isSuccessful)){
+        if (!is_null($isSuccessful)) {
             $data['isSuccessful'] = $isSuccessful;
         }
         if ($additionalResultCodes) {
             $data['additionalResultCodes'] = $additionalResultCodes;
         }
+
         return $this->response = new Response($this, $data);
     }
-    
+
     public function setExpiry($expiry)
     {
         $this->parameters->set('expiry', $expiry);
     }
-    
-    
 }

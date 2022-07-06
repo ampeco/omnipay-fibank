@@ -48,7 +48,6 @@ class OmnipayFibankTest extends TestCase
         $this->assertEquals('bAt6JLX52DUbibbzD9gDFl5Ppr4=', $method->getTransactionId());
     }
 
-
     /**
      * @test
      */
@@ -83,7 +82,6 @@ class OmnipayFibankTest extends TestCase
             'transactionId'     => 'bAt6JLX52DUbibbzD9gDFl5Ppr4=',
             'clientIp'          => '10.20.30.40',
         ])->send();
-
 
         $this->assertEquals('recurring_test_reference1234', $result->getCardReference());
         $this->assertJsonStringEqualsJsonString('{"cardType":"Visa","last4":"6789", "imageUrl":"", "expirationMonth": 1,"expirationYear": 2018}',
@@ -125,11 +123,9 @@ class OmnipayFibankTest extends TestCase
         $this->assertEquals('106', $result->getCode());
         $this->assertEquals('Decline, allowable PIN tries exceeded', $result->getMessage());
 
-
         $this->assertNull($result->getCardReference());
         $this->assertNull($result->getPaymentMethod());
     }
-
 
     /**
      * @test
@@ -159,14 +155,12 @@ class OmnipayFibankTest extends TestCase
         ])->send();
     }
 
-
     /**
      * @test
      */
     public function it_can_request_to_delete_card()
     {
-
-        $ecomm = Mockery::mock(Ecomm::class, function (\Mockery\MockInterface $mock)  {
+        $ecomm = Mockery::mock(Ecomm::class, function (\Mockery\MockInterface $mock) {
             $mock->shouldReceive('setTestMode')->once();
             $mock->shouldReceive('setMerchantCertificate')->with('CERT')->once();
             $mock->shouldReceive('setMerchantCertificatePassword')->with('PWD')->once();
@@ -187,7 +181,6 @@ class OmnipayFibankTest extends TestCase
         ])->send();
 
         $this->assertTrue($method->isSuccessful());
-
 
         $ecomm = Mockery::mock(Ecomm::class, function (\Mockery\MockInterface $mock) {
             $mock->shouldReceive('setTestMode')->once();
@@ -210,7 +203,6 @@ class OmnipayFibankTest extends TestCase
         $method = $gateway->deleteCard([
             'cardReference' => 'recurring_test_reference1234',
         ])->send();
-
     }
 
     /**
@@ -303,7 +295,7 @@ class OmnipayFibankTest extends TestCase
             )->once()->andReturn([
                 'RESULT'      => 'OK',
                 'RESULT_CODE' => '000',
-                'REFUND_TRANS_ID' => '76315716523785127835'
+                'REFUND_TRANS_ID' => '76315716523785127835',
             ]);
         });
 
@@ -336,7 +328,7 @@ class OmnipayFibankTest extends TestCase
             )->once()->andReturn([
                 'RESULT'          => 'OK',
                 'RESULT_CODE'     => '000',
-                'REFUND_TRANS_ID' => '76315716523785127835'
+                'REFUND_TRANS_ID' => '76315716523785127835',
             ]);
         });
 
@@ -370,7 +362,6 @@ class OmnipayFibankTest extends TestCase
         $expected->setCurrencyCode(975);
         $expected->setMerchantCertificate('CERT');
         $expected->setMerchantCertificatePassword('PASS');
-
 
         $this->assertEquals($expected, $actual);
     }

@@ -6,7 +6,7 @@ use Omnipay\Common\Message\ResponseInterface;
 
 class CreateCardRequest extends AbstractRequest
 {
-    
+
     /**
      * Get the raw data array for this message. The format of this varies from gateway to
      * gateway, but will usually be either an associative array, or a SimpleXMLElement.
@@ -22,7 +22,7 @@ class CreateCardRequest extends AbstractRequest
             'language'    => $this->getLanguage(),
         ];
     }
-    
+
     /**
      * Send the request with specified data
      *
@@ -31,9 +31,9 @@ class CreateCardRequest extends AbstractRequest
      */
     public function sendData($data)
     {
-        $response = $this->fibank->createRecurringPayment2($data['amount'], $data['description'], $data['expiry'],
+        $response = $this->fibank->createRecurringPayment($data['amount'], $data['description'], $data['expiry'],
             $data['language']);
-        
+
         return $this->createResponse($response, isset($response['TRANSACTION_ID']));
     }
 }

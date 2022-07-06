@@ -173,24 +173,24 @@ class Ecomm
         return $this->sendRequest($params);
     }
 
-    public function createRecurringPayment2($amount, $description, $expiry, $language = 'en')
-    {
-        $params = [
-            'command' => 'd',
-            'amount' => $amount,
-            'currency' => $this->currency,
-            'client_ip_addr' => $this->client_ip_addr,
-            'description' => $description,
-            'language' => $language,
-            'msg_type' => 'DMS',
-            'biller_client_id' => str_random(12),
-            'perspayee_expiry' => date('my', strtotime($expiry)),
-            'perspayee_gen' => '1',
-            'oneclick' => 'Y',
-        ];
-
-        return $this->sendRequest($params);
-    }
+//    public function createRecurringPayment2($amount, $description, $expiry, $language = 'en')
+//    {
+//        $params = [
+//            'command' => 'd',
+//            'amount' => $amount,
+//            'currency' => $this->currency,
+//            'client_ip_addr' => $this->client_ip_addr,
+//            'description' => $description,
+//            'language' => $language,
+//            'msg_type' => 'DMS',
+//            'biller_client_id' => str_random(12),
+//            'perspayee_expiry' => date('my', strtotime($expiry)),
+//            'perspayee_gen' => '1',
+//            'oneclick' => 'Y',
+//        ];
+//
+//        return $this->sendRequest($params);
+//    }
 
     public function createPreAuthorizationRequest($amount, $description, $cardReference, $language = 'en')
     {
@@ -207,8 +207,6 @@ class Ecomm
             'template_type' => 'DMS',
         ];
 
-        Log::debug('createPreAuthorizationRequest', [$params]);
-
         return $this->sendRequest($params);
     }
 
@@ -218,8 +216,8 @@ class Ecomm
             'command' => 't',
             'trans_id' => $trans_id,
             'amount' => $amount,
-            'currency' => '975',
-            'client_ip_addr' => '127.0.0.1',
+            'currency' => $this->currency,
+            'client_ip_addr' => $this->client_ip_addr,
             'description' => $description,
             'msg_type' => 'DMS',
         ];

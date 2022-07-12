@@ -8,7 +8,9 @@ use Money\Currency;
 class FibankConfiguration
 {
     public static $global = [];
-    public static function ecomm(){
+
+    public static function ecomm(): Ecomm
+    {
         $res = new Ecomm();
 
         if (isset(self::$global['merchantCertificate'])) {
@@ -17,6 +19,14 @@ class FibankConfiguration
 
         if (isset(self::$global['merchantCertificatePassword'])) {
             $res->setMerchantCertificatePassword(self::$global['merchantCertificatePassword']);
+        }
+
+        if (isset(self::$global['merchantCertificate'])) {
+            $res->setMerchantPreAuthorizeCertificate(self::$global['merchantPreAuthorizeCertificate']);
+        }
+
+        if (isset(self::$global['merchantPreAuthorizeCertificatePassword'])) {
+            $res->setMerchantPreAuthorizeCertificatePassword(self::$global['merchantPreAuthorizeCertificatePassword']);
         }
 
         if (isset(self::$global['v2']) && self::$global['v2']) {
@@ -35,15 +45,13 @@ class FibankConfiguration
 
         if (isset(self::$global['testMode']) && self::$global['testMode']) {
             $res->setTestMode();
-            
         } else {
             $res->setLiveMode();
         }
-        
+
         return $res;
     }
-    
-    
+
     public static function merchantCertificate($value = null)
     {
         if (empty($value)) {
@@ -51,7 +59,7 @@ class FibankConfiguration
         }
         self::$global['merchantCertificate'] = $value;
     }
-    
+
     public static function merchantCertificatePassword($value = null)
     {
         if (empty($value)) {
@@ -67,7 +75,7 @@ class FibankConfiguration
         }
         self::$global['currency'] = $value;
     }
-    
+
     public static function connectTimeout($value = null)
     {
         if (empty($value)) {
@@ -75,7 +83,7 @@ class FibankConfiguration
         }
         self::$global['connectTimeout'] = $value;
     }
-    
+
     public static function testMode($value = null)
     {
         if (empty($value)) {

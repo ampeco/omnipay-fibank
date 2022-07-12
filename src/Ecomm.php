@@ -3,7 +3,6 @@
 namespace Ampeco\OmnipayFibank;
 
 use Ampeco\OmnipayFibank\Exceptions\EcommException;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class Ecomm
@@ -28,6 +27,8 @@ class Ecomm
     protected $clientPath = self::CLIENT_PATH;
     protected $certificate_pem;
     protected $certificate_pass;
+    protected $auth_certificate_pem;
+    protected $auth_certificate_pass;
     protected $client_ip_addr;
     protected $connect_timeout = 60;
     protected $currency;
@@ -74,6 +75,16 @@ class Ecomm
     public function setMerchantCertificatePassword($value)
     {
         $this->certificate_pass = $value;
+    }
+
+    public function setMerchantPreAuthorizeCertificate($value)
+    {
+        $this->auth_certificate_pem = $value;
+    }
+
+    public function setMerchantPreAuthorizeCertificatePassword($value)
+    {
+        $this->auth_certificate_pass = $value;
     }
 
     public function setCurrencyCode($currencyCode)
@@ -173,26 +184,7 @@ class Ecomm
         return $this->sendRequest($params);
     }
 
-//    public function createRecurringPayment2($amount, $description, $expiry, $language = 'en')
-//    {
-//        $params = [
-//            'command' => 'd',
-//            'amount' => $amount,
-//            'currency' => $this->currency,
-//            'client_ip_addr' => $this->client_ip_addr,
-//            'description' => $description,
-//            'language' => $language,
-//            'msg_type' => 'DMS',
-//            'biller_client_id' => str_random(12),
-//            'perspayee_expiry' => date('my', strtotime($expiry)),
-//            'perspayee_gen' => '1',
-//            'oneclick' => 'Y',
-//        ];
-//
-//        return $this->sendRequest($params);
-//    }
-
-    public function createPreAuthorizationRequest($amount, $description, $cardReference, $language = 'en')
+    public function createAuthorizationRequest($amount, $description, $cardReference, $language = 'en')
     {
         $params = [
             'command' => 'f',
@@ -207,10 +199,10 @@ class Ecomm
             'template_type' => 'DMS',
         ];
 
-        return $this->sendRequest($params);
+        return $this->sendRequestWithPreAuthCertificates($params);
     }
 
-    public function createTransactionCompletionCaptureRequest($amount, $description, $trans_id)
+    public function createCaptureRequest($amount, $description, $trans_id)
     {
         $params = [
             'command' => 't',
@@ -222,7 +214,7 @@ class Ecomm
             'msg_type' => 'DMS',
         ];
 
-        return $this->sendRequest($params);
+        return $this->sendRequestWithPreAuthCertificates($params);
     }
 
     public function purchaseRecurringPayment($amount, $description, $recc_pmnt_id, $language = 'en')
@@ -275,28 +267,13 @@ class Ecomm
         return $this->endpoint . $this->clientPath . '?trans_id=' . urlencode($trans_id);
     }
 
-    /**
-     * @param $params
-     * @throws EcommException
-     * @return array
-     */
-    protected function sendRequest($params)
+    protected function sendRequest($params, bool $withPreAuthCertificate = false)
     {
         $url = $this->endpoint . ':' . $this->port . $this->path;
 
         $ch = curl_init();
 
-        if ($this->certificate_pem) {
-            $tempPemFile = tmpfile();
-            fwrite($tempPemFile, $this->certificate_pem);
-            $tempPemPath = stream_get_meta_data($tempPemFile);
-            $tempPemPath = $tempPemPath['uri'];
-
-            curl_setopt($ch, CURLOPT_SSLCERT, $tempPemPath);
-        }
-        if ($this->certificate_pass) {
-            curl_setopt($ch, CURLOPT_SSLCERTPASSWD, $this->certificate_pass);
-        }
+        $tempPemFile = $this->setCertificates($ch, $withPreAuthCertificate);
 
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_VERBOSE, 0);
@@ -311,7 +288,7 @@ class Ecomm
 
         $result = curl_exec($ch);
 
-        if ($this->certificate_pem) {
+        if ($tempPemFile) {
             fclose($tempPemFile);
         }
 
@@ -341,5 +318,37 @@ class Ecomm
         }
 
         return $response;
+    }
+
+    protected function setCertificates(\CurlHandle $ch, bool $withPreAuthCertificate = false)
+    {
+        $tempPemFile = null;
+        if ($withPreAuthCertificate) {
+            $certificate = $this->auth_certificate_pem ?? null;
+            $pass = $this->auth_certificate_pass ?? null;
+        } else {
+            $certificate = $this->certificate_pem ?? null;
+            $pass = $this->certificate_pass ?? null;
+        }
+
+        if ($certificate) {
+            $tempPemFile = tmpfile();
+            fwrite($tempPemFile, $certificate);
+            $tempPemPath = stream_get_meta_data($tempPemFile);
+            $tempPemPath = $tempPemPath['uri'];
+
+            curl_setopt($ch, CURLOPT_SSLCERT, $tempPemPath);
+        }
+
+        if ($pass) {
+            curl_setopt($ch, CURLOPT_SSLCERTPASSWD, $pass);
+        }
+
+        return $tempPemFile;
+    }
+
+    protected function sendRequestWithPreAuthCertificates($params)
+    {
+        return $this->sendRequest($params, true);
     }
 }

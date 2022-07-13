@@ -164,11 +164,11 @@ abstract class AbstractRequest extends BaseAbstractRequest
 
     public function getWithPreAuthCertificate()
     {
-        return (bool) $this->getParameter('transactionId');
+        return (bool) $this->getParameter('withPreAuthCertificate');
     }
 
     public function setWithPreAuthCertificate($value)
     {
-        return $this->setParameter('transactionId', $value);
+        return $this->setParameter('withPreAuthCertificate', $value);
     }
 }

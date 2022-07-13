@@ -162,4 +162,13 @@ abstract class AbstractRequest extends BaseAbstractRequest
         return $this->getParameter('merchantPreAuthorizeCertificatePassword');
     }
 
+    public function getWithPreAuthCertificate()
+    {
+        return (bool) $this->getParameter('transactionId');
+    }
+
+    public function setWithPreAuthCertificate($value)
+    {
+        return $this->setParameter('transactionId', $value);
+    }
 }

@@ -6,7 +6,6 @@ use Omnipay\Common\Message\ResponseInterface;
 
 class TransactionResultRequest extends AbstractRequest
 {
-    
     /**
      * Get the raw data array for this message. The format of this varies from gateway to
      * gateway, but will usually be either an associative array, or a SimpleXMLElement.
@@ -19,7 +18,7 @@ class TransactionResultRequest extends AbstractRequest
             'trans_id' => $this->getTransactionId(),
         ];
     }
-    
+
     /**
      * Send the request with specified data
      *
@@ -28,9 +27,9 @@ class TransactionResultRequest extends AbstractRequest
      */
     public function sendData($data)
     {
-        $response = $this->fibank->checkTransactionStatus($data['trans_id']);
+        $response = $this->fibank->checkTransactionStatus($data['trans_id'], (bool) $this->getParameter('withPreAuthCertificate'));
         $response['TRANSACTION_ID'] = $data['trans_id'];
-        
+
         return $this->createResponse($response);
     }
 }

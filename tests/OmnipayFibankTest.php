@@ -68,7 +68,7 @@ class OmnipayFibankTest extends TestCase
             $mock->shouldReceive('setClientIpAddr')->with('10.20.30.40')->once();
             $mock->shouldReceive('setCurrencyCode')->with(null)->once();
             $mock->shouldReceive('checkTransactionStatus')->with(
-                'bAt6JLX52DUbibbzD9gDFl5Ppr4='
+                'bAt6JLX52DUbibbzD9gDFl5Ppr4=', false
             )->once()
                 ->andReturn([
                     'RESULT' => 'OK',
@@ -112,7 +112,7 @@ class OmnipayFibankTest extends TestCase
             $mock->shouldReceive('setClientIpAddr')->with('10.20.30.40')->once();
             $mock->shouldReceive('setCurrencyCode')->with(null)->once();
             $mock->shouldReceive('checkTransactionStatus')->with(
-                'bAt6JLX52DUbibbzD9gDFl5Ppr4='
+                'bAt6JLX52DUbibbzD9gDFl5Ppr4=', false
             )->once()
                 ->andReturn([
                     'RESULT' => 'FAILED',
@@ -154,7 +154,7 @@ class OmnipayFibankTest extends TestCase
             $mock->shouldReceive('setClientIpAddr')->with('10.20.30.40')->once();
             $mock->shouldReceive('setCurrencyCode')->with(null)->once();
             $mock->shouldReceive('checkTransactionStatus')->with(
-                'bAt6JLX52DUbibbzD9gDFl5Ppr4='
+                'bAt6JLX52DUbibbzD9gDFl5Ppr4=', false
             )->once()
                 ->andThrow(new EcommException('Cannot connect to server', -1));
         });

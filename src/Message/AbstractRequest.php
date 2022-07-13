@@ -18,8 +18,8 @@ abstract class AbstractRequest extends BaseAbstractRequest
     /**
      * Create a new Request
      *
-     * @param ClientInterface $httpClient  A Guzzle client to make API calls with
-     * @param HttpRequest     $httpRequest A Symfony HTTP request object
+     * @param ClientInterface $httpClient A Guzzle client to make API calls with
+     * @param HttpRequest $httpRequest A Symfony HTTP request object
      * @param Ecomm $braintree The Braintree Gateway
      */
     public function __construct(ClientInterface $httpClient, HttpRequest $httpRequest, Ecomm $fibank)
@@ -108,6 +108,9 @@ abstract class AbstractRequest extends BaseAbstractRequest
         $this->fibank->setMerchantCertificate($this->getMerchantCertificate());
         $this->fibank->setMerchantCertificatePassword($this->getMerchantCertificatePassword());
 
+        $this->fibank->setMerchantPreAuthorizeCertificate($this->getMerchantPreAuthorizeCertificate());
+        $this->fibank->setMerchantPreAuthorizeCertificatePassword($this->getMerchantPreAuthorizeCertificatePassword());
+
         $this->fibank->setClientIpAddr($this->getClientIp());
 
         $this->fibank->setCurrencyCode($this->getCurrencyNumeric());
@@ -138,4 +141,25 @@ abstract class AbstractRequest extends BaseAbstractRequest
     {
         $this->parameters->set('expiry', $expiry);
     }
+
+    public function setMerchantPreAuthorizeCertificate($value)
+    {
+        return $this->setParameter('merchantPreAuthorizeCertificate', $value);
+    }
+
+    public function setMerchantPreAuthorizeCertificatePassword($value)
+    {
+        return $this->setParameter('merchantPreAuthorizeCertificatePassword', $value);
+    }
+
+    public function getMerchantPreAuthorizeCertificate()
+    {
+        return $this->getParameter('merchantPreAuthorizeCertificate');
+    }
+
+    public function getMerchantPreAuthorizeCertificatePassword()
+    {
+        return $this->getParameter('merchantPreAuthorizeCertificatePassword');
+    }
+
 }

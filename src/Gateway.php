@@ -82,19 +82,9 @@ class Gateway extends AbstractGateway
         return $this->setParameter('merchantCertificatePassword', $value);
     }
 
-    public function getMerchantPreAuthorizeCertificate()
-    {
-        return $this->getParameter('merchantPreAuthorizeCertificate');
-    }
-
     public function setMerchantPreAuthorizeCertificate($value)
     {
         return $this->setParameter('merchantPreAuthorizeCertificate', $value);
-    }
-
-    public function getMerchantPreAuthorizeCertificatePassword()
-    {
-        return $this->getParameter('merchantPreAuthorizeCertificatePassword');
     }
 
     public function setMerchantPreAuthorizeCertificatePassword($value)

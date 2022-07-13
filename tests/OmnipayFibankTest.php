@@ -23,6 +23,8 @@ class OmnipayFibankTest extends TestCase
             $mock->shouldReceive('getRedirectUrl')->once()->andReturn('https://mdpay-test.fibank.bg/ClientHandler?trans_id=' . urlencode('bAt6JLX52DUbibbzD9gDFl5Ppr4='));
             $mock->shouldReceive('setMerchantCertificate')->with('')->once();
             $mock->shouldReceive('setMerchantCertificatePassword')->with('')->once();
+            $mock->shouldReceive('setMerchantPreAuthorizeCertificate')->with('')->once();
+            $mock->shouldReceive('setMerchantPreAuthorizeCertificatePassword')->with('')->once();
             $mock->shouldReceive('setClientIpAddr')->with('10.20.30.40')->once();
             $mock->shouldReceive('setCurrencyCode')->with(975)->once();
             $mock->shouldReceive('createRecurringPayment')->with(
@@ -40,8 +42,8 @@ class OmnipayFibankTest extends TestCase
         $gateway->setCreateCardCurrency('BGN');
 
         $method = $gateway->createCard([
-            'clientIp'    => '10.20.30.40',
-            'expiry'      => $expire,
+            'clientIp' => '10.20.30.40',
+            'expiry' => $expire,
             'description' => 'Register a new payment method. The amount will be credited to your account',
         ])->send();
 
@@ -61,6 +63,8 @@ class OmnipayFibankTest extends TestCase
             $mock->shouldReceive('setTestMode')->once();
             $mock->shouldReceive('setMerchantCertificate')->with('CERT')->once();
             $mock->shouldReceive('setMerchantCertificatePassword')->with('PWD')->once();
+            $mock->shouldReceive('setMerchantPreAuthorizeCertificate')->with('')->once();
+            $mock->shouldReceive('setMerchantPreAuthorizeCertificatePassword')->with('')->once();
             $mock->shouldReceive('setClientIpAddr')->with('10.20.30.40')->once();
             $mock->shouldReceive('setCurrencyCode')->with(null)->once();
             $mock->shouldReceive('checkTransactionStatus')->with(
@@ -70,11 +74,11 @@ class OmnipayFibankTest extends TestCase
                     'RESULT' => 'OK',
                     'RESULT_CODE' => '000',
                     '3DSECURE' => 'AUTHENTICATED',
-                    'RRN'   => '611111407831',
-                    'APPROVAL_CODE'   => 'B30361',
-                    'CARD_NUMBER'   => '4***********6789',
-                    'RECC_PMNT_ID'   => 'recurring_test_reference1234',
-                    'RECC_PMNT_EXPIRY'   => '0118',
+                    'RRN' => '611111407831',
+                    'APPROVAL_CODE' => 'B30361',
+                    'CARD_NUMBER' => '4***********6789',
+                    'RECC_PMNT_ID' => 'recurring_test_reference1234',
+                    'RECC_PMNT_EXPIRY' => '0118',
                 ]);
         });
 
@@ -83,8 +87,8 @@ class OmnipayFibankTest extends TestCase
         $gateway->setMerchantCertificate('CERT');
         $gateway->setMerchantCertificatePassword('PWD');
         $result = $gateway->transactionResult([
-            'transactionId'     => 'bAt6JLX52DUbibbzD9gDFl5Ppr4=',
-            'clientIp'          => '10.20.30.40',
+            'transactionId' => 'bAt6JLX52DUbibbzD9gDFl5Ppr4=',
+            'clientIp' => '10.20.30.40',
         ])->send();
 
         $this->assertEquals('recurring_test_reference1234', $result->getCardReference());
@@ -103,15 +107,17 @@ class OmnipayFibankTest extends TestCase
             $mock->shouldReceive('setTestMode')->once();
             $mock->shouldReceive('setMerchantCertificate')->with('CERT')->once();
             $mock->shouldReceive('setMerchantCertificatePassword')->with('PWD')->once();
+            $mock->shouldReceive('setMerchantPreAuthorizeCertificate')->with('')->once();
+            $mock->shouldReceive('setMerchantPreAuthorizeCertificatePassword')->with('')->once();
             $mock->shouldReceive('setClientIpAddr')->with('10.20.30.40')->once();
             $mock->shouldReceive('setCurrencyCode')->with(null)->once();
             $mock->shouldReceive('checkTransactionStatus')->with(
                 'bAt6JLX52DUbibbzD9gDFl5Ppr4='
             )->once()
                 ->andReturn([
-                    'RESULT'           => 'FAILED',
-                    'RESULT_CODE'      => '106',
-                    '3DSECURE'         => 'DECLINED',
+                    'RESULT' => 'FAILED',
+                    'RESULT_CODE' => '106',
+                    '3DSECURE' => 'DECLINED',
                 ]);
         });
 
@@ -121,7 +127,7 @@ class OmnipayFibankTest extends TestCase
         $gateway->setMerchantCertificatePassword('PWD');
         $result = $gateway->transactionResult([
             'transactionId' => 'bAt6JLX52DUbibbzD9gDFl5Ppr4=',
-            'clientIp'      => '10.20.30.40',
+            'clientIp' => '10.20.30.40',
         ])->send();
 
         $this->assertFalse($result->isSuccessful());
@@ -143,6 +149,8 @@ class OmnipayFibankTest extends TestCase
             $mock->shouldReceive('setTestMode')->once();
             $mock->shouldReceive('setMerchantCertificate')->with('CERT')->once();
             $mock->shouldReceive('setMerchantCertificatePassword')->with('PWD')->once();
+            $mock->shouldReceive('setMerchantPreAuthorizeCertificate')->with('')->once();
+            $mock->shouldReceive('setMerchantPreAuthorizeCertificatePassword')->with('')->once();
             $mock->shouldReceive('setClientIpAddr')->with('10.20.30.40')->once();
             $mock->shouldReceive('setCurrencyCode')->with(null)->once();
             $mock->shouldReceive('checkTransactionStatus')->with(
@@ -158,7 +166,7 @@ class OmnipayFibankTest extends TestCase
         $this->expectExceptionMessage('Cannot connect to server');
         $gateway->transactionResult([
             'transactionId' => 'bAt6JLX52DUbibbzD9gDFl5Ppr4=',
-            'clientIp'      => '10.20.30.40',
+            'clientIp' => '10.20.30.40',
         ])->send();
     }
 
@@ -172,6 +180,8 @@ class OmnipayFibankTest extends TestCase
             $mock->shouldReceive('setTestMode')->once();
             $mock->shouldReceive('setMerchantCertificate')->with('CERT')->once();
             $mock->shouldReceive('setMerchantCertificatePassword')->with('PWD')->once();
+            $mock->shouldReceive('setMerchantPreAuthorizeCertificate')->with('')->once();
+            $mock->shouldReceive('setMerchantPreAuthorizeCertificatePassword')->with('')->once();
             $mock->shouldReceive('setClientIpAddr')->with(null)->once();
             $mock->shouldReceive('setCurrencyCode')->with(null)->once();
             $mock->shouldReceive('deleteRecurringPayment')->with(
@@ -185,7 +195,7 @@ class OmnipayFibankTest extends TestCase
         $gateway->setMerchantCertificate('CERT');
         $gateway->setMerchantCertificatePassword('PWD');
         $method = $gateway->deleteCard([
-            'cardReference'      => 'recurring_test_reference1234',
+            'cardReference' => 'recurring_test_reference1234',
         ])->send();
 
         $this->assertTrue($method->isSuccessful());
@@ -195,7 +205,8 @@ class OmnipayFibankTest extends TestCase
             $mock->shouldReceive('setTestMode')->once();
             $mock->shouldReceive('setMerchantCertificate')->with('CERT')->once();
             $mock->shouldReceive('setMerchantCertificatePassword')->with('PWD')->once();
-
+            $mock->shouldReceive('setMerchantPreAuthorizeCertificate')->with('')->once();
+            $mock->shouldReceive('setMerchantPreAuthorizeCertificatePassword')->with('')->once();
             $mock->shouldReceive('setClientIpAddr')->with(null)->once();
             $mock->shouldReceive('setCurrencyCode')->with(null)->once();
             $mock->shouldReceive('deleteRecurringPayment')->with(
@@ -224,6 +235,8 @@ class OmnipayFibankTest extends TestCase
             $mock->shouldReceive('setTestMode')->once();
             $mock->shouldReceive('setMerchantCertificate')->with('CERT')->once();
             $mock->shouldReceive('setMerchantCertificatePassword')->with('PWD')->once();
+            $mock->shouldReceive('setMerchantPreAuthorizeCertificate')->with('')->once();
+            $mock->shouldReceive('setMerchantPreAuthorizeCertificatePassword')->with('')->once();
             $mock->shouldReceive('getRedirectUrl')->once()->andReturn('https://mdpay-test.fibank.bg/ClientHandler?trans_id=' . urlencode('trfG/yvwuFsYXRY5uLgKWBLQvxM='));
             $mock->shouldReceive('setClientIpAddr')->with(null)->once();
             $mock->shouldReceive('setCurrencyCode')->with(975)->once();
@@ -231,11 +244,11 @@ class OmnipayFibankTest extends TestCase
                 1000, 'Purchase #01234', 'recurring_test_reference1234', null
             )->once()
                 ->andReturn([
-                    'TRANSACTION_ID'   => 'trfG/yvwuFsYXRY5uLgKWBLQvxM=',
-                    'RESULT'           => 'OK',
-                    'RESULT_CODE'      => '000',
-                    'RRN'              => '611111407827',
-                    'APPROVAL_CODE'    => '783052',
+                    'TRANSACTION_ID' => 'trfG/yvwuFsYXRY5uLgKWBLQvxM=',
+                    'RESULT' => 'OK',
+                    'RESULT_CODE' => '000',
+                    'RRN' => '611111407827',
+                    'APPROVAL_CODE' => '783052',
                 ]);
         });
 
@@ -245,9 +258,9 @@ class OmnipayFibankTest extends TestCase
         $gateway->setMerchantCertificatePassword('PWD');
         $response = $gateway->purchase([
             'cardReference' => 'recurring_test_reference1234',
-            'amount'        => '10',
-            'currency'      => 'BGN',
-            'description'   => 'Purchase #01234',
+            'amount' => '10',
+            'currency' => 'BGN',
+            'description' => 'Purchase #01234',
         ])->send();
 
         $this->assertTrue($response->isSuccessful());
@@ -264,13 +277,15 @@ class OmnipayFibankTest extends TestCase
             $mock->allows()->setTestMode()->once();
             $mock->allows()->setMerchantCertificate('CERT')->once();
             $mock->allows()->setMerchantCertificatePassword('PWD')->once();
+            $mock->shouldReceive('setMerchantPreAuthorizeCertificate')->with('')->once();
+            $mock->shouldReceive('setMerchantPreAuthorizeCertificatePassword')->with('')->once();
             $mock->allows()->setClientIpAddr(null)->once();
             $mock->allows()->setCurrencyCode(975)->once();
             $mock->allows()->purchaseRecurringPayment(
                 1000, 'Purchase #01234', 'recurring_test_reference1234', null
             )->once()->andReturn([
-                'RESULT'         => 'FAILED',
-                'RESULT_CODE'    => '201',
+                'RESULT' => 'FAILED',
+                'RESULT_CODE' => '201',
             ]);
         });
 
@@ -280,9 +295,9 @@ class OmnipayFibankTest extends TestCase
         $gateway->setMerchantCertificatePassword('PWD');
         $response = $gateway->purchase([
             'cardReference' => 'recurring_test_reference1234',
-            'amount'        => '10',
-            'currency'      => 'BGN',
-            'description'   => 'Purchase #01234',
+            'amount' => '10',
+            'currency' => 'BGN',
+            'description' => 'Purchase #01234',
         ])->send();
 
         $this->assertFalse($response->isSuccessful());
@@ -300,12 +315,14 @@ class OmnipayFibankTest extends TestCase
             $mock->allows()->setTestMode()->once();
             $mock->allows()->setMerchantCertificate('CERT')->once();
             $mock->allows()->setMerchantCertificatePassword('PWD')->once();
+            $mock->shouldReceive('setMerchantPreAuthorizeCertificate')->with('')->once();
+            $mock->shouldReceive('setMerchantPreAuthorizeCertificatePassword')->with('')->once();
             $mock->allows()->setClientIpAddr(null)->once();
             $mock->allows()->setCurrencyCode(null)->once();
             $mock->allows()->refundTransaction(
                 'trfG/yvwuFsYXRY5uLgKWBLQvxM=', null
             )->once()->andReturn([
-                'RESULT'      => 'OK',
+                'RESULT' => 'OK',
                 'RESULT_CODE' => '000',
                 'REFUND_TRANS_ID' => '76315716523785127835',
             ]);
@@ -334,13 +351,15 @@ class OmnipayFibankTest extends TestCase
             $mock->allows()->setTestMode()->once();
             $mock->allows()->setMerchantCertificate('CERT')->once();
             $mock->allows()->setMerchantCertificatePassword('PWD')->once();
+            $mock->shouldReceive('setMerchantPreAuthorizeCertificate')->with('')->once();
+            $mock->shouldReceive('setMerchantPreAuthorizeCertificatePassword')->with('')->once();
             $mock->allows()->setClientIpAddr(null)->once();
             $mock->allows()->setCurrencyCode(975)->once();
             $mock->allows()->refundTransaction(
                 'trfG/yvwuFsYXRY5uLgKWBLQvxM=', 500
             )->once()->andReturn([
-                'RESULT'          => 'OK',
-                'RESULT_CODE'     => '000',
+                'RESULT' => 'OK',
+                'RESULT_CODE' => '000',
                 'REFUND_TRANS_ID' => '76315716523785127835',
             ]);
         });
@@ -377,6 +396,57 @@ class OmnipayFibankTest extends TestCase
         $expected->setMerchantCertificatePassword('PASS');
 
         $this->assertEquals($expected, $actual);
+    }
+
+    /**
+     * @test
+     */
+    public function it_calls_send_request_with_pre_auth_terminal_when_authorization_request()
+    {
+        $ecomm = Mockery::mock(Ecomm::class, function (\Mockery\MockInterface $mock) {
+            $mock->shouldAllowMockingProtectedMethods();
+            $mock->shouldReceive('setV1')->once();
+            $mock->allows()->setTestMode()->once();
+            $mock->allows()->setMerchantCertificate('CERT')->once();
+            $mock->allows()->setMerchantCertificatePassword('PWD')->once();
+            $mock->allows()->setMerchantPreAuthorizeCertificate('CERT2')->once();
+            $mock->allows()->setMerchantPreAuthorizeCertificatePassword('PWD2')->once();
+            $mock->allows()->setClientIpAddr(null)->once();
+            $mock->allows()->setCurrencyCode(975)->once();
+            $mock->shouldReceive('sendRequest')->withArgs([[
+                'command' => 'f',
+                'amount' => 1000,
+                'currency' => null,
+                'client_ip_addr' => null,
+                'description' => 'Test',
+                'language' => null,
+                'msg_type' => 'DMS',
+                'biller_client_id' => '12345',
+                'oneclick' => 'Y',
+                'template_type' => 'DMS',
+            ], true])->once()->andReturn([
+                'RESULT' => 'OK',
+                'RESULT_CODE' => '000',
+                'TRANSACTION_ID' => '76315716523785127835',
+            ]);
+        })->makePartial();
+
+        $gateway = new Gateway(null, null, $ecomm);
+        $gateway->setTestMode(true);
+        $gateway->setMerchantCertificate('CERT');
+        $gateway->setMerchantCertificatePassword('PWD');
+        $gateway->setMerchantPreAuthorizeCertificate('CERT2');
+        $gateway->setMerchantPreAuthorizeCertificatePassword('PWD2');
+        $response = $gateway->authorize([
+            'amount' => 10,
+            'description' => 'Test',
+            'cardReference' => '12345',
+            'currency' => 'BGN',
+        ])->send();
+
+        $this->assertTrue($response->isSuccessful());
+        $this->assertEquals('Approved', $response->getMessage());
+        $this->assertEquals('000', $response->getCode());
     }
 
     public function tearDown(): void

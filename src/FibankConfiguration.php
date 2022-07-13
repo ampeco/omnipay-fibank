@@ -68,6 +68,22 @@ class FibankConfiguration
         self::$global['merchantCertificatePassword'] = $value;
     }
 
+    public static function merchantPreAuthorizeCertificate($value = null)
+    {
+        if (empty($value)) {
+            return self::$global['merchantPreAuthorizeCertificate'];
+        }
+        self::$global['merchantPreAuthorizeCertificate'] = $value;
+    }
+
+    public static function merchantPreAuthorizeCertificatePassword($value = null)
+    {
+        if (empty($value)) {
+            return self::$global['merchantPreAuthorizeCertificatePassword'];
+        }
+        self::$global['merchantPreAuthorizeCertificatePassword'] = $value;
+    }
+
     public static function currency($value = null)
     {
         if (empty($value)) {

@@ -324,11 +324,11 @@ class Ecomm
     {
         $tempPemFile = null;
         if ($withPreAuthCertificate) {
-            $certificate = $this->auth_certificate_pem ?? null;
-            $pass = $this->auth_certificate_pass ?? null;
+            $certificate = $this->auth_certificate_pem;
+            $pass = $this->auth_certificate_pass;
         } else {
-            $certificate = $this->certificate_pem ?? null;
-            $pass = $this->certificate_pass ?? null;
+            $certificate = $this->certificate_pem;
+            $pass = $this->certificate_pass;
         }
 
         if ($certificate) {

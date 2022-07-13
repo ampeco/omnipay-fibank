@@ -21,7 +21,7 @@ class FibankConfiguration
             $res->setMerchantCertificatePassword(self::$global['merchantCertificatePassword']);
         }
 
-        if (isset(self::$global['merchantCertificate'])) {
+        if (isset(self::$global['merchantPreAuthorizeCertificate'])) {
             $res->setMerchantPreAuthorizeCertificate(self::$global['merchantPreAuthorizeCertificate']);
         }
 

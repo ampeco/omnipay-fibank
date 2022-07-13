@@ -199,7 +199,7 @@ class Ecomm
             'template_type' => 'DMS',
         ];
 
-        return $this->sendRequestWithPreAuthCertificates($params);
+        return $this->sendRequest($params, true);
     }
 
     public function createCaptureRequest($amount, $description, $trans_id)
@@ -214,7 +214,7 @@ class Ecomm
             'msg_type' => 'DMS',
         ];
 
-        return $this->sendRequestWithPreAuthCertificates($params);
+        return $this->sendRequest($params, true);
     }
 
     public function purchaseRecurringPayment($amount, $description, $recc_pmnt_id, $language = 'en')
@@ -242,12 +242,7 @@ class Ecomm
         return $this->sendRequest($params);
     }
 
-    /**
-     * @param $trans_id
-     * @throws EcommException
-     * @return array
-     */
-    public function checkTransactionStatus($trans_id)
+    public function checkTransactionStatus($trans_id, bool $withPreAuthCertificate = false)
     {
         $params = [
             'command' => 'c',
@@ -255,7 +250,7 @@ class Ecomm
             'client_ip_addr' => $this->client_ip_addr,
         ];
 
-        return $this->sendRequest($params);
+        return $this->sendRequest($params, $withPreAuthCertificate);
     }
 
     /**
@@ -345,10 +340,5 @@ class Ecomm
         }
 
         return $tempPemFile;
-    }
-
-    protected function sendRequestWithPreAuthCertificates($params)
-    {
-        return $this->sendRequest($params, true);
     }
 }

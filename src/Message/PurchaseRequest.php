@@ -30,19 +30,8 @@ class PurchaseRequest extends AbstractRequest
      */
     public function sendData($data)
     {
-        $response = $this->fibank->purchaseRecurringPayment($data['amount'], $data['description'],
-            $data['recc_pmnt_id'], $data['language']);
+        $response = $this->fibank->purchaseRecurringPayment($data['amount'], $data['description'], $data['recc_pmnt_id'], $data['language']);
 
-//        $responseAuthorize = $this->fibank->createPreAuthorizationRequest($data['amount'], $data['description'], $data['recc_pmnt_id'], $data['language']);
-//
-//        $responseTransaction = $this->fibank->checkTransactionStatus($responseAuthorize['TRANSACTION_ID']);
-//
-//        $authorizeUrl = 'https://mdpay-test.fibank.bg/ecomm_v2/ClientHandler?trans_id=' . rtrim($responseAuthorize['TRANSACTION_ID'], '=') . '%3D';
-//
-//        $response = $this->fibank->createTransactionCompletionCaptureRequest($data['amount'], $data['description'], $responseAuthorize['TRANSACTION_ID']);
-//
-//        $response['TRANSACTION_ID'] = $responseAuthorize['TRANSACTION_ID'];
-//
         return $this->createResponse($response, null, [
             '108' => 'Merchant communication with cardholder has to be done',
             '114' => 'It is possible to try to execute the transaction next time',

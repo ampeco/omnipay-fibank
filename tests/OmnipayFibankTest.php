@@ -18,6 +18,7 @@ class OmnipayFibankTest extends TestCase
     {
         $expire = date('Y-m-d', strtotime('+10 years'));
         $ecomm = Mockery::mock(Ecomm::class, function (\Mockery\MockInterface $mock) use ($expire) {
+            $mock->shouldReceive('setV1')->once();
             $mock->shouldReceive('setTestMode')->once();
             $mock->shouldReceive('getRedirectUrl')->once()->andReturn('https://mdpay-test.fibank.bg/ClientHandler?trans_id=' . urlencode('bAt6JLX52DUbibbzD9gDFl5Ppr4='));
             $mock->shouldReceive('setMerchantCertificate')->with('')->once();
@@ -27,7 +28,8 @@ class OmnipayFibankTest extends TestCase
             $mock->shouldReceive('createRecurringPayment')->with(
                 150,
                 'Register a new payment method. The amount will be credited to your account',
-                $expire
+                $expire,
+                null,
             )->once()
                 ->andReturn(['TRANSACTION_ID' => 'bAt6JLX52DUbibbzD9gDFl5Ppr4=']);
         });
@@ -54,6 +56,8 @@ class OmnipayFibankTest extends TestCase
     public function it_can_check_a_request_to_create_card()
     {
         $ecomm = Mockery::mock(Ecomm::class, function (\Mockery\MockInterface $mock) {
+            $mock->shouldReceive('setV1')->once();
+            $mock->shouldReceive('getRedirectUrl')->once();
             $mock->shouldReceive('setTestMode')->once();
             $mock->shouldReceive('setMerchantCertificate')->with('CERT')->once();
             $mock->shouldReceive('setMerchantCertificatePassword')->with('PWD')->once();
@@ -94,6 +98,8 @@ class OmnipayFibankTest extends TestCase
     public function it_handles_errors_on_card_add()
     {
         $ecomm = Mockery::mock(Ecomm::class, function (\Mockery\MockInterface $mock) {
+            $mock->shouldReceive('setV1')->once();
+            $mock->shouldReceive('getRedirectUrl')->once();
             $mock->shouldReceive('setTestMode')->once();
             $mock->shouldReceive('setMerchantCertificate')->with('CERT')->once();
             $mock->shouldReceive('setMerchantCertificatePassword')->with('PWD')->once();
@@ -133,6 +139,7 @@ class OmnipayFibankTest extends TestCase
     public function it_handles_network_errors_on_card_add()
     {
         $ecomm = Mockery::mock(Ecomm::class, function (\Mockery\MockInterface $mock) {
+            $mock->shouldReceive('setV1')->once();
             $mock->shouldReceive('setTestMode')->once();
             $mock->shouldReceive('setMerchantCertificate')->with('CERT')->once();
             $mock->shouldReceive('setMerchantCertificatePassword')->with('PWD')->once();
@@ -161,6 +168,7 @@ class OmnipayFibankTest extends TestCase
     public function it_can_request_to_delete_card()
     {
         $ecomm = Mockery::mock(Ecomm::class, function (\Mockery\MockInterface $mock) {
+            $mock->shouldReceive('setV1')->once();
             $mock->shouldReceive('setTestMode')->once();
             $mock->shouldReceive('setMerchantCertificate')->with('CERT')->once();
             $mock->shouldReceive('setMerchantCertificatePassword')->with('PWD')->once();
@@ -183,6 +191,7 @@ class OmnipayFibankTest extends TestCase
         $this->assertTrue($method->isSuccessful());
 
         $ecomm = Mockery::mock(Ecomm::class, function (\Mockery\MockInterface $mock) {
+            $mock->shouldReceive('setV1')->once();
             $mock->shouldReceive('setTestMode')->once();
             $mock->shouldReceive('setMerchantCertificate')->with('CERT')->once();
             $mock->shouldReceive('setMerchantCertificatePassword')->with('PWD')->once();
@@ -211,6 +220,7 @@ class OmnipayFibankTest extends TestCase
     public function it_can_make_a_purchase_with_a_saved_card()
     {
         $ecomm = Mockery::mock(Ecomm::class, function (\Mockery\MockInterface $mock) {
+            $mock->shouldReceive('setV1')->once();
             $mock->shouldReceive('setTestMode')->once();
             $mock->shouldReceive('setMerchantCertificate')->with('CERT')->once();
             $mock->shouldReceive('setMerchantCertificatePassword')->with('PWD')->once();
@@ -218,7 +228,7 @@ class OmnipayFibankTest extends TestCase
             $mock->shouldReceive('setClientIpAddr')->with(null)->once();
             $mock->shouldReceive('setCurrencyCode')->with(975)->once();
             $mock->shouldReceive('purchaseRecurringPayment')->with(
-                1000, 'Purchase #01234', 'recurring_test_reference1234'
+                1000, 'Purchase #01234', 'recurring_test_reference1234', null
             )->once()
                 ->andReturn([
                     'TRANSACTION_ID'   => 'trfG/yvwuFsYXRY5uLgKWBLQvxM=',
@@ -250,13 +260,14 @@ class OmnipayFibankTest extends TestCase
     public function it_displays_correct_messages_on_2xx_failures()
     {
         $ecomm = Mockery::mock(Ecomm::class, function (\Mockery\MockInterface $mock) {
+            $mock->shouldReceive('setV1')->once();
             $mock->allows()->setTestMode()->once();
             $mock->allows()->setMerchantCertificate('CERT')->once();
             $mock->allows()->setMerchantCertificatePassword('PWD')->once();
             $mock->allows()->setClientIpAddr(null)->once();
             $mock->allows()->setCurrencyCode(975)->once();
             $mock->allows()->purchaseRecurringPayment(
-                1000, 'Purchase #01234', 'recurring_test_reference1234'
+                1000, 'Purchase #01234', 'recurring_test_reference1234', null
             )->once()->andReturn([
                 'RESULT'         => 'FAILED',
                 'RESULT_CODE'    => '201',
@@ -285,6 +296,7 @@ class OmnipayFibankTest extends TestCase
     public function it_can_refund_transaction_with_full_amount()
     {
         $ecomm = Mockery::mock(Ecomm::class, function (\Mockery\MockInterface $mock) {
+            $mock->shouldReceive('setV1')->once();
             $mock->allows()->setTestMode()->once();
             $mock->allows()->setMerchantCertificate('CERT')->once();
             $mock->allows()->setMerchantCertificatePassword('PWD')->once();
@@ -318,6 +330,7 @@ class OmnipayFibankTest extends TestCase
     public function it_can_refund_transaction_with_partial_amount()
     {
         $ecomm = Mockery::mock(Ecomm::class, function (\Mockery\MockInterface $mock) {
+            $mock->shouldReceive('setV1')->once();
             $mock->allows()->setTestMode()->once();
             $mock->allows()->setMerchantCertificate('CERT')->once();
             $mock->allows()->setMerchantCertificatePassword('PWD')->once();

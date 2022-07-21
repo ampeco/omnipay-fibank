@@ -54,7 +54,12 @@ class Response extends AbstractResponse implements RedirectResponseInterface
 
     public function isScaRequired(): bool
     {
-        return @$this->getData()['RESULT'] == 'PENDING' && $this->getData()['3DSECURE'] == 'FAILED';
+        return @$this->data['RESULT'] == 'PENDING' && $this->data['3DSECURE'] == 'FAILED';
+    }
+
+    public function isScaCompletedSuccessfully(): bool
+    {
+        return @$this->data['RESULT'] == 'OK' && $this->data['3DSECURE'] == 'AUTHENTICATED';
     }
 
     public function getMessage()

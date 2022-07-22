@@ -2,7 +2,7 @@
     "name": "ampeco/omnipay-fibank",
     "type": "library",
     "description": "Omnipay plugin for fibank ECOMM recurring payments",
-    "version": "1.2.5",
+    "version": "1.2.6",
     "keywords": [
         "omnipay",
         "fibank",

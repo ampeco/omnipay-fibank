@@ -32,6 +32,6 @@ class AuthorizeRequest extends AbstractRequest
     {
         $response = $this->fibank->createAuthorizationRequest($data['amount'], $data['description'], $data['cardReference'], $data['language']);
 
-        return $this->createResponse($response, isset($response['TRANSACTION_ID']));
+        return $this->createResponse($response);
     }
 }

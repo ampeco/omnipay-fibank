@@ -164,11 +164,12 @@ abstract class AbstractRequest extends BaseAbstractRequest
 
     public function getWithPreAuthCertificate()
     {
-        return (bool) $this->getParameter('withPreAuthCertificate');
+        return $this->fibank->useDMS();
+        // return (bool) $this->getParameter('withPreAuthCertificate');
     }
 
-    public function setWithPreAuthCertificate($value)
-    {
-        return $this->setParameter('withPreAuthCertificate', $value);
-    }
+//    public function setWithPreAuthCertificate($value)
+//    {
+//        return $this->setParameter('withPreAuthCertificate', $value);
+//    }
 }

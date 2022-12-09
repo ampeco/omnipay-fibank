@@ -3,6 +3,7 @@
 namespace Ampeco\OmnipayFibank;
 
 use Ampeco\OmnipayFibank\Exceptions\EcommException;
+use Ampeco\OmnipayFibank\Exceptions\NotSupportedException;
 
 /**
  * Class Ecomm
@@ -109,6 +110,15 @@ class Ecomm
     }
 
     /**
+     * Should we use dual message mode for payments and add card
+     * @return bool
+     */
+    public function useDMS()
+    {
+        return $this->auth_certificate_pem && $this->auth_certificate_pass;
+    }
+
+    /**
      * @param $amount
      * @param $description
      * @throws EcommException
@@ -184,8 +194,37 @@ class Ecomm
         return $this->sendRequest($params);
     }
 
+    /**
+     * @param $amount
+     * @param $description
+     * @param $expiry
+     * @param $language
+     * @return array
+     * @throws EcommException
+     */
+    public function createDMSAddCardRequest($amount, $description, $expiry, $language = 'en')
+    {
+        $params = [
+            'command' => 'd',
+            'amount' => $amount,
+            'currency' => $this->currency,
+            'client_ip_addr' => $this->client_ip_addr,
+            'description' => $description,
+            'language' => $language,
+            'msg_type' => 'DMS',
+            // 'biller_client_id' => '???',
+            'perspayee_expiry' => date('my', strtotime($expiry)),
+            'perspayee_gen' => '1',
+            'oneclick' => 'Y',
+        ];
+        return $this->sendRequest($params);
+    }
+
     public function createAuthorizationRequest($amount, $description, $cardReference, $language = 'en')
     {
+        if(!$this->useDMS()) {
+            throw new NotSupportedException('According to settings pre-authorization terminal is not supported');
+        }
         $params = [
             'command' => 'f',
             'amount' => $amount,
@@ -199,11 +238,14 @@ class Ecomm
             'template_type' => 'DMS',
         ];
 
-        return $this->sendRequest($params, true);
+        return $this->sendRequest($params);
     }
 
     public function createCaptureRequest($amount, $description, $trans_id)
     {
+        if(!$this->useDMS()) {
+            throw new NotSupportedException('According settings pre-authorization terminal is not supported');
+        }
         $params = [
             'command' => 't',
             'trans_id' => $trans_id,
@@ -214,7 +256,17 @@ class Ecomm
             'msg_type' => 'DMS',
         ];
 
-        return $this->sendRequest($params, true);
+        return $this->sendRequest($params);
+    }
+
+    public function purchaseDMSRecurringPayment($amount, $description, $cardReference, $language = 'en')
+    {
+        $authResponse = $this->createAuthorizationRequest($amount, $description, $cardReference, $language);
+        $captureResponse = [];
+        if(isset($authResponse['TRANSACTION_ID']) && $authResponse['TRANSACTION_ID']) {
+            $captureResponse = $this->createCaptureRequest($amount, $description, $authResponse['TRANSACTION_ID']);
+        }
+        return array_merge($authResponse, $captureResponse);
     }
 
     public function purchaseRecurringPayment($amount, $description, $recc_pmnt_id, $language = 'en')
@@ -242,7 +294,7 @@ class Ecomm
         return $this->sendRequest($params);
     }
 
-    public function checkTransactionStatus($trans_id, bool $withPreAuthCertificate = false)
+    public function checkTransactionStatus($trans_id)
     {
         $params = [
             'command' => 'c',
@@ -250,7 +302,7 @@ class Ecomm
             'client_ip_addr' => $this->client_ip_addr,
         ];
 
-        return $this->sendRequest($params, $withPreAuthCertificate);
+        return $this->sendRequest($params);
     }
 
     /**
@@ -262,13 +314,13 @@ class Ecomm
         return $this->endpoint . $this->clientPath . '?trans_id=' . urlencode($trans_id);
     }
 
-    protected function sendRequest($params, bool $withPreAuthCertificate = false)
+    protected function sendRequest($params)
     {
         $url = $this->endpoint . ':' . $this->port . $this->path;
 
         $ch = curl_init();
 
-        $tempPemFile = $this->setCertificates($ch, $withPreAuthCertificate);
+        $tempPemFile = $this->setCertificates($ch, $this->useDMS());
 
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_VERBOSE, 0);

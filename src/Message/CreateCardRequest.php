@@ -31,8 +31,13 @@ class CreateCardRequest extends AbstractRequest
      */
     public function sendData($data)
     {
-        $response = $this->fibank->createRecurringPayment($data['amount'], $data['description'], $data['expiry'],
-            $data['language']);
+        if($this->fibank->useDMS()) {
+            $response = $this->fibank->createDMSAddCardRequest($data['amount'], $data['description'], $data['expiry'],
+                $data['language']);
+        } else {
+            $response = $this->fibank->createRecurringPayment($data['amount'], $data['description'], $data['expiry'],
+                $data['language']);
+        }
 
         return $this->createResponse($response, isset($response['TRANSACTION_ID']));
     }

@@ -4,6 +4,7 @@ namespace Ampeco\OmnipayFibank;
 
 use Ampeco\OmnipayFibank\Exceptions\EcommException;
 use Ampeco\OmnipayFibank\Exceptions\NotSupportedException;
+use Ramsey\Uuid\Uuid;
 
 /**
  * Class Ecomm
@@ -212,7 +213,7 @@ class Ecomm
             'description' => $description,
             'language' => $language,
             'msg_type' => 'DMS',
-            // 'biller_client_id' => '???',
+            'biller_client_id' => Uuid::uuid4(),
             'perspayee_expiry' => date('my', strtotime($expiry)),
             'perspayee_gen' => '1',
             'oneclick' => 'Y',
@@ -262,11 +263,11 @@ class Ecomm
     public function purchaseDMSRecurringPayment($amount, $description, $cardReference, $language = 'en')
     {
         $authResponse = $this->createAuthorizationRequest($amount, $description, $cardReference, $language);
-        $captureResponse = [];
-        if(isset($authResponse['TRANSACTION_ID']) && $authResponse['TRANSACTION_ID']) {
-            $captureResponse = $this->createCaptureRequest($amount, $description, $authResponse['TRANSACTION_ID']);
+        if (isset($authResponse['TRANSACTION_ID']) && $authResponse['TRANSACTION_ID']) {
+            //additional data in order to redirect user to SCA
+            $statusResponse = $this->checkTransactionStatus($authResponse['TRANSACTION_ID']);
         }
-        return array_merge($authResponse, $captureResponse);
+        return array_merge($authResponse, $statusResponse);
     }
 
     public function purchaseRecurringPayment($amount, $description, $recc_pmnt_id, $language = 'en')

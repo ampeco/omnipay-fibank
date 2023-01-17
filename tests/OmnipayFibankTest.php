@@ -27,6 +27,7 @@ class OmnipayFibankTest extends TestCase
             $mock->shouldReceive('setMerchantPreAuthorizeCertificatePassword')->with('')->once();
             $mock->shouldReceive('setClientIpAddr')->with('10.20.30.40')->once();
             $mock->shouldReceive('setCurrencyCode')->with(975)->once();
+            $mock->shouldReceive('useDMS')->once()->andReturn(false);
             $mock->shouldReceive('createRecurringPayment')->with(
                 150,
                 'Register a new payment method. The amount will be credited to your account',
@@ -67,6 +68,7 @@ class OmnipayFibankTest extends TestCase
             $mock->shouldReceive('setMerchantPreAuthorizeCertificatePassword')->with('')->once();
             $mock->shouldReceive('setClientIpAddr')->with('10.20.30.40')->once();
             $mock->shouldReceive('setCurrencyCode')->with(null)->once();
+            $mock->shouldReceive('useDMS')->once()->andReturn(false);
             $mock->shouldReceive('checkTransactionStatus')->with(
                 'bAt6JLX52DUbibbzD9gDFl5Ppr4=', false
             )->once()
@@ -111,6 +113,7 @@ class OmnipayFibankTest extends TestCase
             $mock->shouldReceive('setMerchantPreAuthorizeCertificatePassword')->with('')->once();
             $mock->shouldReceive('setClientIpAddr')->with('10.20.30.40')->once();
             $mock->shouldReceive('setCurrencyCode')->with(null)->once();
+            $mock->shouldReceive('useDMS')->once()->andReturn(false);
             $mock->shouldReceive('checkTransactionStatus')->with(
                 'bAt6JLX52DUbibbzD9gDFl5Ppr4=', false
             )->once()
@@ -153,6 +156,7 @@ class OmnipayFibankTest extends TestCase
             $mock->shouldReceive('setMerchantPreAuthorizeCertificatePassword')->with('')->once();
             $mock->shouldReceive('setClientIpAddr')->with('10.20.30.40')->once();
             $mock->shouldReceive('setCurrencyCode')->with(null)->once();
+            $mock->shouldReceive('useDMS')->once()->andReturn(false);
             $mock->shouldReceive('checkTransactionStatus')->with(
                 'bAt6JLX52DUbibbzD9gDFl5Ppr4=', false
             )->once()
@@ -240,6 +244,7 @@ class OmnipayFibankTest extends TestCase
             $mock->shouldReceive('getRedirectUrl')->once()->andReturn('https://mdpay-test.fibank.bg/ClientHandler?trans_id=' . urlencode('trfG/yvwuFsYXRY5uLgKWBLQvxM='));
             $mock->shouldReceive('setClientIpAddr')->with(null)->once();
             $mock->shouldReceive('setCurrencyCode')->with(975)->once();
+            $mock->shouldReceive('useDMS')->once()->andReturn(false);
             $mock->shouldReceive('purchaseRecurringPayment')->with(
                 1000, 'Purchase #01234', 'recurring_test_reference1234', null
             )->once()
@@ -281,6 +286,7 @@ class OmnipayFibankTest extends TestCase
             $mock->shouldReceive('setMerchantPreAuthorizeCertificatePassword')->with('')->once();
             $mock->allows()->setClientIpAddr(null)->once();
             $mock->allows()->setCurrencyCode(975)->once();
+            $mock->shouldReceive('useDMS')->once()->andReturn(false);
             $mock->allows()->purchaseRecurringPayment(
                 1000, 'Purchase #01234', 'recurring_test_reference1234', null
             )->once()->andReturn([
@@ -413,18 +419,12 @@ class OmnipayFibankTest extends TestCase
             $mock->allows()->setMerchantPreAuthorizeCertificatePassword('PWD2')->once();
             $mock->allows()->setClientIpAddr(null)->once();
             $mock->allows()->setCurrencyCode(975)->once();
-            $mock->shouldReceive('sendRequest')->withArgs([[
-                'command' => 'f',
-                'amount' => 1000,
-                'currency' => null,
-                'client_ip_addr' => null,
-                'description' => 'Test',
-                'language' => null,
-                'msg_type' => 'DMS',
-                'biller_client_id' => '12345',
-                'oneclick' => 'Y',
-                'template_type' => 'DMS',
-            ], true])->once()->andReturn([
+            $mock->shouldReceive('createAuthorizationRequest')->with(
+                1000,
+                'Test',
+                '12345',
+                null,
+            )->once()->andReturn([
                 'RESULT' => 'OK',
                 'RESULT_CODE' => '000',
                 'TRANSACTION_ID' => '76315716523785127835',

@@ -146,7 +146,7 @@ class Gateway extends AbstractGateway
 
     public function supportsAuthorize()
     {
-        return true;
+        return $this->fibank->useDMS();
     }
 
     public function capture(array $parameters = [])

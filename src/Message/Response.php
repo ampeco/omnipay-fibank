@@ -57,9 +57,24 @@ class Response extends AbstractResponse implements RedirectResponseInterface
         return @$this->data['RESULT'] == 'PENDING' && $this->data['3DSECURE'] == 'FAILED';
     }
 
+    public function isPending(): bool
+    {
+        return @$this->data['RESULT'] == 'PENDING';
+    }
+
     public function isScaCompletedSuccessfully(): bool
     {
         return @$this->data['RESULT'] == 'OK' && $this->data['3DSECURE'] == 'AUTHENTICATED';
+    }
+
+    public function isReversed(): bool
+    {
+        return in_array(@$this->data['RESULT'], ['REVERSED', 'AUTOREVERSED']);
+    }
+
+    public function isFailed(): bool
+    {
+        return in_array(@$this->data['RESULT'], ['FAILED', 'TIMEOUT', 'DECLINED']);
     }
 
     public function getMessage()

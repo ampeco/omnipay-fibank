@@ -16,7 +16,6 @@ class TransactionResultRequest extends AbstractRequest
     {
         return [
             'trans_id' => $this->getTransactionId(),
-            'withPreAuthCertificate' => $this->getWithPreAuthCertificate(),
         ];
     }
 
@@ -28,7 +27,7 @@ class TransactionResultRequest extends AbstractRequest
      */
     public function sendData($data)
     {
-        $response = $this->fibank->checkTransactionStatus($data['trans_id'], $data['withPreAuthCertificate']);
+        $response = $this->fibank->checkTransactionStatus($data['trans_id']);
         $response['TRANSACTION_ID'] = $data['trans_id'];
 
         return $this->createResponse($response);

@@ -81,6 +81,16 @@ abstract class AbstractRequest extends BaseAbstractRequest
         return $this->setParameter('connectTimeout', $value);
     }
 
+    public function getProxy()
+    {
+        return $this->getParameter('proxy');
+    }
+
+    public function setProxy($value)
+    {
+        return $this->setParameter('proxy', $value);
+    }
+
     public function getLanguage()
     {
         return $this->getParameter('language');
@@ -117,6 +127,10 @@ abstract class AbstractRequest extends BaseAbstractRequest
 
         if ($this->getConnectTimeout()) {
             $this->fibank->setConnectTimeout($this->getConnectTimeout());
+        }
+
+        if ($this->getProxy()) {
+            $this->fibank->setProxy($this->getProxy());
         }
     }
 

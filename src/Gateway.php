@@ -45,10 +45,10 @@ class Gateway extends AbstractGateway
     public function getDefaultParameters()
     {
         return [
-            'merchantCertificate'         => '',
+            'merchantCertificate' => '',
             'merchantCertificatePassword' => '',
-            'testMode'                    => false,
-            'v2'                          => false,
+            'testMode' => false,
+            'v2' => false,
         ];
     }
 
@@ -130,6 +130,16 @@ class Gateway extends AbstractGateway
     public function setConnectTimeout($value)
     {
         return $this->setParameter('connectTimeout', $value);
+    }
+
+    public function getProxy()
+    {
+        return $this->getParameter('proxy');
+    }
+
+    public function setProxy($value)
+    {
+        return $this->setParameter('proxy', $value);
     }
 
     protected function createRequest($class, array $parameters)

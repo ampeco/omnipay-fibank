@@ -35,9 +35,10 @@ class Ecomm
     protected $connect_timeout = 60;
     protected $currency;
 
+    protected ?string $proxy = null;
+
     /**
      * Ecomm constructor.
-     * @param array $config
      */
     public function __construct()
     {
@@ -108,6 +109,11 @@ class Ecomm
     public function setConnectTimeout($seconds)
     {
         $this->connect_timeout = $seconds;
+    }
+
+    public function setProxy(string $proxy)
+    {
+        $this->proxy = $proxy;
     }
 
     /**
@@ -200,8 +206,8 @@ class Ecomm
      * @param $description
      * @param $expiry
      * @param $language
-     * @return array
      * @throws EcommException
+     * @return array
      */
     public function createDMSAddCardRequest($amount, $description, $expiry, $language = 'en')
     {
@@ -218,12 +224,13 @@ class Ecomm
             'perspayee_gen' => '1',
             'oneclick' => 'Y',
         ];
+
         return $this->sendRequest($params);
     }
 
     public function createAuthorizationRequest($amount, $description, $cardReference, $language = 'en')
     {
-        if(!$this->useDMS()) {
+        if (!$this->useDMS()) {
             throw new NotSupportedException('According to settings pre-authorization terminal is not supported');
         }
         $params = [
@@ -244,7 +251,7 @@ class Ecomm
 
     public function createCaptureRequest($amount, $description, $trans_id)
     {
-        if(!$this->useDMS()) {
+        if (!$this->useDMS()) {
             throw new NotSupportedException('According settings pre-authorization terminal is not supported');
         }
         $params = [
@@ -267,6 +274,7 @@ class Ecomm
             //additional data in order to redirect user to SCA
             $statusResponse = $this->checkTransactionStatus($authResponse['TRANSACTION_ID']);
         }
+
         return array_merge($authResponse, $statusResponse);
     }
 
@@ -333,6 +341,9 @@ class Ecomm
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $this->connect_timeout);
+        if ($this->proxy) {
+            curl_setopt($ch, CURLOPT_PROXY, $this->proxy);
+        }
 
         $result = curl_exec($ch);
 
